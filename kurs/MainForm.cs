@@ -66,7 +66,7 @@ namespace kurs
                                 this.Hide();
                             }
                             else
-                            {
+                            {//Ошибка при неправильно пароле
                                 MessageBox.Show("Неверный логин или пароль!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                         }
