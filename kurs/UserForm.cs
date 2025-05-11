@@ -362,5 +362,11 @@ namespace kurs
         {
 
         }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            var frm = new ChangePasswordForm(userId,connectionString);
+            frm.ShowDialog();
+        }
     }
 }
