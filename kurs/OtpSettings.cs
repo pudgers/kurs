@@ -1,8 +1,11 @@
-﻿using System;
+﻿using OtpNet;
+using QRCoder;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -11,11 +14,13 @@ using System.Windows.Forms;
 
 namespace kurs
 {
-    public partial class ChangePasswordForm: Form
+    public partial class OtpSettings: Form
     {
         private int userId;
         private string connectionString;
-        public ChangePasswordForm(int userId,string connectionString)
+        Totp Totp;
+        string secretKey;
+        public OtpSettings(int userId,string connectionString)
         {
             InitializeComponent();
             this.userId = userId;
@@ -57,6 +62,19 @@ namespace kurs
             nameLbl.Text = data.name;
             surnameLbl.Text = data.surName;
             loginLbl.Text = data.login;
+
+             secretKey = Tools.RandomString(16);
+
+             Totp = new Totp(Base32Encoding.ToBytes(secretKey));
+
+  
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(secretKey, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+            Bitmap qrCodeImage = qrCode.GetGraphic(5);
+            pictureBox1.Image = qrCodeImage;
+
+
         }
 
         private void ChangePasswordForm_Load(object sender, EventArgs e)
@@ -66,46 +84,17 @@ namespace kurs
         }
 
 
-        private void ChangePasswordForUser(int userId, string password)
-        {
-            var connection = new SqlConnection(connectionString);
 
-            try
-            {
-                connection.Open();
-                var cmd = new SqlCommand("update [dbo].[Users] set UserPassword = @password where UserID = @userId", connection);
-                cmd.Parameters.AddWithValue("password", password);
-                cmd.Parameters.AddWithValue("userId", userId);
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-
-            }
-            finally
-            {
-                connection.Close();
-            }
-        }
 
 private void button1_Click(object sender, EventArgs e)
         {
-            if (!String.IsNullOrWhiteSpace(password1Tb.Text) && !String.IsNullOrWhiteSpace(password2Tb.Text) && password1Tb.Text == password2Tb.Text)
-            {
-                ChangePasswordForUser(userId, password1Tb.Text);
-                MessageBox.Show("Пароль сменен!", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information) ;
-                DialogResult = DialogResult.OK;
-            }
-            else
-            {
-                MessageBox.Show(this,"Введены неправильные данные!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+    
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            OtpSettings otpSettings = new OtpSettings(userId, connectionString);
-            otpSettings.ShowDialog();
+            MessageBox.Show(secretKey);
+            MessageBox.Show(Totp.ComputeTotp());
         }
     }
 }
