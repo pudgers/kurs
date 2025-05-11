@@ -10,13 +10,16 @@ namespace kurs
         // Строка подключения к базе данных
         private string connectionString = "Data Source=DEPRESSEDK1D;Initial Catalog=Demo_2025;Integrated Security=True;Encrypt=False";
 
+        private int userId;
+
         // Конструктор формы
-        public AdminForm()
+        public AdminForm(int userId)
         {
             InitializeComponent();
             LoadOrders();    // Загрузка заказов при запуске формы
             LoadRequests();  // Загрузка запросов пользователей при запуске формы
             LoadServices();  // Загрузка услуг при запуске формы
+            this.userId = userId;
         }
 
         // Загрузка заказов в DataGridView
@@ -218,6 +221,12 @@ namespace kurs
             this.Close(); // Закрываем текущую форму
             MainForm mainForm = new MainForm(); // Открываем главную форму
             mainForm.Show();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var frm = new ChangePasswordForm(userId, connectionString);
+            frm.ShowDialog();
         }
     }
 }

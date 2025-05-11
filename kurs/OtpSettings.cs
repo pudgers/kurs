@@ -27,6 +27,15 @@ namespace kurs
             this.connectionString = connectionString;
 
         }
+
+
+     
+
+
+
+
+      
+
         private (String login,String name, String surName) GetInfoFromDBForCurrentUser()
         {
             var connection = new SqlConnection(connectionString);
@@ -58,21 +67,38 @@ namespace kurs
 
         private void UpdateUI()
         {
+
+            TwoFactorController twoFactorController = new TwoFactorController(connectionString);
+            fa2Cb.Checked = twoFactorController.GetIs2faStatus(userId);
+
+
+
             var data = GetInfoFromDBForCurrentUser();
             nameLbl.Text = data.name;
             surnameLbl.Text = data.surName;
             loginLbl.Text = data.login;
 
-             secretKey = Tools.RandomString(16);
+            if (fa2Cb.Checked)
+            {
+                secretKey = twoFactorController.GetSecretKey(userId);
+            }
+            else
+            {
+                secretKey = Tools.RandomString(16);
+            }
+
 
              Totp = new Totp(Base32Encoding.ToBytes(secretKey));
 
   
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(secretKey, QRCodeGenerator.ECCLevel.Q);
+            var uriString = new OtpUri(OtpType.Totp, secretKey, "alice@google.com", "ACME Co").ToString();
+
+
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(uriString,QRCodeGenerator.ECCLevel.Default);
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(5);
-            pictureBox1.Image = qrCodeImage;
+            qrCodePb.Image = qrCodeImage;
 
 
         }
@@ -88,13 +114,23 @@ namespace kurs
 
 private void button1_Click(object sender, EventArgs e)
         {
-    
+            if (fa2Cb.Checked)
+            {
+                var facontroller = new TwoFactorController(connectionString);
+                facontroller.SetF2AStatus(userId, fa2Cb.Checked, secretKey);
+            }
+            else
+            {
+                var facontroller = new TwoFactorController(connectionString);
+                facontroller.SetF2AStatus(userId, false, "");
+            }
+            MessageBox.Show("Настройки сохранены!", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            DialogResult = DialogResult.OK;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(secretKey);
-            MessageBox.Show(Totp.ComputeTotp());
+
         }
     }
 }

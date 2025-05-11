@@ -1,5 +1,7 @@
-﻿using System;
+﻿using OtpNet;
+using System;
 using System.Data.SqlClient;
+using System.Reflection.Emit;
 using System.Windows.Forms;
 
 namespace kurs
@@ -54,16 +56,52 @@ namespace kurs
                                 Form nextForm;
                                 if (role == "Admin")
                                 {
-                                    nextForm = new AdminForm();
+                                    nextForm = new AdminForm(userId);
                                 }
                                 else
                                 {
                                     nextForm = new UserForm(userId); // Передаем userId в конструктор
                                 }
+                                bool canEnter = true;
+
+                                // 2FA
+                                if(nextForm is UserForm || nextForm is AdminForm)
+                                {
+                                    TwoFactorController twoFactorController = new TwoFactorController(connectionString);
+                                    if (twoFactorController.GetIs2faStatus(userId))
+                                    {
+                                        var pinDialog = new PinCodeChecker();
+                                        if (pinDialog.ShowDialog() == DialogResult.OK)
+                                        {
+                                            var enteredPin = pinDialog.EnteredPinCode;
+                                            var secretKey = twoFactorController.GetSecretKey(userId).Trim();
+                                            var otpChecker = new Totp(Base32Encoding.ToBytes(secretKey));
+                                            long timeWindowUsed = 0;
+                                         var result =   otpChecker.VerifyTotp(enteredPin, out timeWindowUsed, VerificationWindow.RfcSpecifiedNetworkDelay);
+                                            if (!result)
+                                            {
+                                                canEnter = false;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            canEnter = false;
+                                        }
+                                    }
+                                }
 
                                 // Показываем следующую форму и скрываем текущую
-                                nextForm.Show();
-                                this.Hide();
+                                if (canEnter)
+                                {
+                                    nextForm.Show();
+                                    this.Hide();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Вход невозможен!!!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                                }
+
                             }
                             else
                             {

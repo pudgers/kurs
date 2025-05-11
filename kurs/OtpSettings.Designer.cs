@@ -34,8 +34,8 @@
             this.surnameLbl = new System.Windows.Forms.Label();
             this.loginLbl = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.qrCodePb = new System.Windows.Forms.PictureBox();
+            this.fa2Cb = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.qrCodePb)).BeginInit();
             this.SuspendLayout();
@@ -80,7 +80,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(193, 327);
+            this.button1.Location = new System.Drawing.Point(362, 306);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(111, 23);
             this.button1.TabIndex = 8;
@@ -88,32 +88,32 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(48, 224);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // qrCodePb
             // 
-            this.qrCodePb.Location = new System.Drawing.Point(155, 60);
+            this.qrCodePb.Location = new System.Drawing.Point(236, 12);
             this.qrCodePb.Name = "qrCodePb";
-            this.qrCodePb.Size = new System.Drawing.Size(327, 248);
-            this.qrCodePb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.qrCodePb.Size = new System.Drawing.Size(356, 288);
+            this.qrCodePb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.qrCodePb.TabIndex = 10;
             this.qrCodePb.TabStop = false;
+            // 
+            // fa2Cb
+            // 
+            this.fa2Cb.AutoSize = true;
+            this.fa2Cb.Location = new System.Drawing.Point(24, 175);
+            this.fa2Cb.Name = "fa2Cb";
+            this.fa2Cb.Size = new System.Drawing.Size(120, 20);
+            this.fa2Cb.TabIndex = 11;
+            this.fa2Cb.Text = "Включить 2FA";
+            this.fa2Cb.UseVisualStyleBackColor = true;
             // 
             // OtpSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(536, 362);
+            this.ClientSize = new System.Drawing.Size(660, 345);
+            this.Controls.Add(this.fa2Cb);
             this.Controls.Add(this.qrCodePb);
-            this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.loginLbl);
             this.Controls.Add(this.surnameLbl);
@@ -136,7 +136,7 @@
         private System.Windows.Forms.Label surnameLbl;
         private System.Windows.Forms.Label loginLbl;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.PictureBox qrCodePb;
+        private System.Windows.Forms.CheckBox fa2Cb;
     }
 }
