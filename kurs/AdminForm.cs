@@ -228,5 +228,10 @@ namespace kurs
             var frm = new ChangePasswordForm(userId, connectionString);
             frm.ShowDialog();
         }
+
+        private void AdminForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

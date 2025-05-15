@@ -2,9 +2,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
+public static class RichTextBoxExtensions
+{
+    public static void AppendText(this System.Windows.Forms.RichTextBox box, string text, Color color)
+    {
+        box.SelectionStart = box.TextLength;
+        box.SelectionLength = 0;
 
+        box.SelectionColor = color;
+        box.AppendText(text);
+        box.SelectionColor = box.ForeColor;
+    }
+}
 
 public class Tools
 {

@@ -227,6 +227,7 @@
             this.Controls.Add(this.dgvOrders);
             this.Name = "AdminForm";
             this.Text = "Панель администратора";
+            this.Load += new System.EventHandler(this.AdminForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvOrders)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRequests)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvServices)).EndInit();

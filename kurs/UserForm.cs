@@ -14,6 +14,23 @@ namespace kurs
         private string connectionString = "Data Source=DEPRESSEDK1D;Initial Catalog=Demo_2025;Integrated Security=True;Encrypt=False";
         private int userId;
 
+        String GetUserName(int userId)
+        {
+            try
+            {
+                SqlConnection connection = new SqlConnection(connectionString);
+                connection.Open();
+                var cmd = new SqlCommand("SELECT CONCAT(FirstName,' ',LastName) from Users Where USERID = @userId", connection);
+                cmd.Parameters.AddWithValue("userId", userId);
+                return cmd.ExecuteScalar()?.ToString();
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            return null;
+        }
+
+
         public UserForm(int userId)
         {
             InitializeComponent();
@@ -367,6 +384,12 @@ namespace kurs
         {
             var frm = new ChangePasswordForm(userId,connectionString);
             frm.ShowDialog();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            AiChatForm aiChatForm = new AiChatForm(GetUserName(userId),"Оптима 100");
+            aiChatForm.Show();
         }
     }
 }
